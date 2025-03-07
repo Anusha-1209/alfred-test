@@ -108,3 +108,5 @@ resource "aws_instance" "web_server" {
 output "web_server_public_ip" {
   value = aws_instance.web_server.public_ip
 }
+
+# Let's test the alfred test PR
