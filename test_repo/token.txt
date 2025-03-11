@@ -1,0 +1,61 @@
+# %%
+!pip install tiktoken
+tiktoken_count = {}
+
+# %%
+import os
+import tiktoken
+
+def read_files_in_directory(root_dir):
+    # Traverse through the directory structure
+    for dirpath, dirnames, filenames in os.walk(root_dir):
+        #print(f'Found directory: {dirpath}')
+        for filename in filenames:
+            file_path = os.path.join(dirpath, filename)
+            print(f'Reading file: {file_path}')
+            token_count = count_tokens_in_file(file_path)
+            tiktoken_count[file_path] = token_count
+
+
+def count_tokens_in_file(file_path, encoding_name='cl100k_base'):
+    # Load the encoding
+    encoding = tiktoken.get_encoding(encoding_name)
+    
+    # Read the file content
+    with open(file_path, 'r', encoding='utf-8') as file:
+        text = file.read()
+    
+    # Encode the text to get tokens
+    tokens = encoding.encode(text)
+    
+    # Count the number of tokens
+    num_tokens = len(tokens)
+    
+    return num_tokens
+
+
+# Example usage
+root_directory = '/Users/sreeadde/Desktop/github2025/alfred/alfred-evaluation/dataset/pr_data_latest'
+read_files_in_directory(root_directory)
+print(len(tiktoken_count))
+
+# %%
+tiktoken_count
+
+# %%
+import json
+
+def write_dict_to_file(file_path, data):
+    # Ensure data is a dictionary
+    if not isinstance(data, dict):
+        raise ValueError("The data should be a dictionary.")
+    
+    # Open the file in write mode
+    with open(file_path, 'w', encoding='utf-8') as file:
+        # Serialize the dictionary and write to the file
+        json.dump(data, file, ensure_ascii=False, indent=4)
+
+file_path = '/Users/sreeadde/Desktop/github2025/alfred/alfred-evaluation/dataset/tokens.json'
+write_dict_to_file(file_path, tiktoken_count)
+
+
